@@ -53,7 +53,7 @@
 
             <!-- token-->
             <div class="col-sm-8 text-right">
-              <input type="text" id="token" class="form-control" style="width: 20ch; display: inline;" readonly
+              <input type="text" id="token" class="form-control" style="width: 26ch; display: inline;" readonly
                      value="Token"
                      title="Token">
             </div>
@@ -81,23 +81,22 @@
     error = $('#error');
 
   function tokenize() {
-    $.post('http://gitlab.com/api/v3/session?login=' + login.val() + '&password=' + password.val())
+    $.post('https://gitlab.com/api/v3/session?login=' + login.val() + '&password=' + password.val())
 
       .done(function (data) {
-        token.val(data['private_token']);
+        token.val(data.private_token);
       })
 
-      .error(function (request) {
-        error.val(JSON.parse(request.responseText)['message']).attr('hidden', false);
+      .fail(function (deferred) {
+        error.text(deferred.responseJSON.message).attr('hidden', false);
       })
 
       .always(function () {
-        submit.val('Tokenize');
-        submit.attr('disabled', false);
+        submit.val('Tokenize').attr('disabled', false);
       });
 
     submit.val('Loading...').attr('disabled', true);
-    error.val('').attr('hidden', true);
+    error.text('').attr('hidden', true);
   }
 
 </script>
